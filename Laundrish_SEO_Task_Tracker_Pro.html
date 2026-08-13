@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Laundrish.com — SEO Delivery Tracker</title>
+<style>
+:root{
+  --espresso:#3a281e; --chocolate:#5a3d2f; --brown:#765443;
+  --copper:#b66f4b; --sand:#efe5d6; --cream:#f7f3ed; --paper:#fffdf9;
+  --ink:#241b16; --muted:#756a62; --line:#dfd4c7;
+  --red:#b74b43; --shadow:0 12px 30px rgba(58,40,30,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:#eee8e0;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}
+#app{max-width:1180px;margin:0 auto;padding:28px 24px 50px}
+.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,var(--espresso),var(--chocolate) 68%,#694a38);color:#fff;border-radius:20px;padding:30px 32px 26px;box-shadow:var(--shadow);margin-bottom:18px}
+.hero:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;right:-70px;top:-100px;background:rgba(182,111,75,.28)}
+.hero-grid{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;position:relative;z-index:1}
+.eyebrow{font-size:11px;letter-spacing:1.7px;font-weight:700;color:#d7b06c;text-transform:uppercase}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:36px;line-height:1.05;margin:7px 0 8px;letter-spacing:-.4px}
+.hero-copy{max-width:680px;color:#e8ddd4;font-size:14px;line-height:1.6;margin:0}
+.progress-box{min-width:165px;text-align:right}.progress-number{font-size:42px;font-weight:750;line-height:1}
+.progress-label{font-size:12px;color:#d8cbc2;margin-top:5px}.progress-track{height:7px;background:rgba(255,255,255,.18);border-radius:10px;margin-top:14px;overflow:hidden}
+.progress-fill{height:100%;background:#d4ad68;border-radius:10px;width:0%;transition:width .25s ease}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:0 5px 18px rgba(58,40,30,.04)}
+.stat-kicker{font-size:10px;text-transform:uppercase;letter-spacing:1.1px;color:var(--muted);font-weight:700}
+.stat-value{font-size:28px;font-weight:750;margin-top:4px;color:var(--espresso)}.stat-value.alert{color:var(--red)}
+.control-panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:20px;box-shadow:0 5px 18px rgba(58,40,30,.04)}
+.controls-top{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+.search{position:relative;flex:1;min-width:240px}.search input{width:100%;padding:11px 14px 11px 38px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:13px;outline:none}
+.search input:focus{border-color:var(--copper);box-shadow:0 0 0 3px rgba(182,111,75,.12)}.search-icon{position:absolute;left:13px;top:9px;color:var(--muted)}
+.control-actions{display:flex;gap:7px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);background:#fff;padding:8px 11px;border-radius:999px;font-size:11.5px;color:var(--muted);cursor:pointer}
+.pill:hover{border-color:#c4b3a4}.pill.active{background:var(--espresso);border-color:var(--espresso);color:#fff}
+.pill.priority-active{background:var(--sand);border-color:#c89e76;color:var(--espresso);font-weight:700}
+.reset{background:transparent;border:1px solid var(--line);padding:8px 11px;border-radius:9px;color:var(--muted);cursor:pointer;font-size:11.5px}
+.filter-line{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.filter-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--muted);margin-right:2px}
+.workstream{margin:24px 0 0}.workstream-head{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.workstream-marker{width:8px;height:28px;border-radius:5px;background:var(--copper)}
+.workstream-title{font-family:Georgia,"Times New Roman",serif;font-size:21px;margin:0;color:var(--espresso)}
+.workstream-sub{font-size:11px;color:var(--muted);margin:2px 0 0}.workstream-count{margin-left:auto;font-size:11px;color:var(--muted)}
+.task{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:start;background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:14px 15px;margin:8px 0;box-shadow:0 3px 12px rgba(58,40,30,.035);transition:.15s ease}
+.task:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(58,40,30,.07);border-color:#cdbbaa}.task.done{opacity:.56}
+.check{width:19px;height:19px;margin:2px 0 0;accent-color:var(--chocolate);cursor:pointer}
+.task-title{font-weight:720;font-size:13.5px;line-height:1.35;color:var(--espresso);margin:0 0 5px}.task.done .task-title{text-decoration:line-through}
+.task-desc{font-size:12px;line-height:1.55;color:#685e57;margin:0}.meta{display:flex;gap:6px;justify-content:flex-end;align-items:flex-start;flex-wrap:wrap;min-width:145px}
+.badge{font-size:10px;font-weight:700;padding:5px 8px;border-radius:999px;white-space:nowrap}.badge-role{background:#eee4da;color:var(--chocolate)}
+.badge-effort{background:#f4f0ea;color:#756a62;border:1px solid #e4dbd1}
+.t-critical{background:#f8e3df;color:#a44039}.t-high{background:#f6ead7;color:#956222}.t-medium{background:#e4edf4;color:#486b88}.t-low{background:#ecebe8;color:#68655f}
+.empty{padding:38px 20px;text-align:center;background:var(--paper);border:1px dashed var(--line);border-radius:14px;color:var(--muted)}
+.footer{margin-top:28px;padding-top:15px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+@media(max-width:760px){#app{padding:15px 12px 35px}.hero{padding:24px 21px}.hero-grid{grid-template-columns:1fr}.progress-box{text-align:left}.stats{grid-template-columns:repeat(2,1fr)}.task{grid-template-columns:28px 1fr}.meta{grid-column:2;justify-content:flex-start;min-width:0}h1{font-size:30px}}
+</style>
+</head>
+<body>
+<div id="app">
+<section class="hero"><div class="hero-grid">
+<div><div class="eyebrow">LAUNDRISH.COM · SEO DELIVERY TRACKER PREPARED By Ahmad Raza</div>
+<h1>SEO Implementation Command Centre</h1>
+<p class="hero-copy">A practical delivery tracker for the August 2026 technical, SEO, UX and content programme. Tick work as it ships; progress is saved automatically in this browser.</p></div>
+<div class="progress-box"><div class="progress-number" id="progress-number">0%</div><div class="progress-label" id="progress-label">0 of 70 complete</div><div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div></div>
+</div></section>
+
+<section class="stats">
+<div class="stat"><div class="stat-kicker">Total tasks</div><div class="stat-value" id="stat-total">70</div></div>
+<div class="stat"><div class="stat-kicker">Completed</div><div class="stat-value" id="stat-done">0</div></div>
+<div class="stat"><div class="stat-kicker">Critical open</div><div class="stat-value alert" id="stat-critical">0</div></div>
+<div class="stat"><div class="stat-kicker">Workstreams</div><div class="stat-value" id="stat-streams">0</div></div>
+</section>
+
+<section class="control-panel">
+<div class="controls-top"><div class="search"><span class="search-icon">⌕</span><input id="search" type="search" placeholder="Search tasks, descriptions, roles…"></div>
+<div class="control-actions"><button class="pill" id="show-all">All</button><button class="pill" id="show-open">Open</button><button class="pill" id="show-done">Completed</button><button class="reset" id="reset">Reset progress</button></div></div>
+<div class="filter-line">
+<span class="filter-label">Priority</span>
+<button class="pill priority priority-active" data-tier="all">All</button><button class="pill priority" data-tier="critical">Critical</button><button class="pill priority" data-tier="high">High</button><button class="pill priority" data-tier="medium">Medium</button><button class="pill priority" data-tier="low">Lower</button>
+<span class="filter-label" style="margin-left:8px">Role</span>
+<button class="pill role active" data-role="all">All roles</button><button class="pill role" data-role="Developer">Developer</button><button class="pill role" data-role="SEO Analyst">SEO Analyst</button><button class="pill role" data-role="Design">Design</button><button class="pill role" data-role="Content">Content</button>
+</div></section>
+
+<main id="sections"></main>
+<footer class="footer"><span>LAUNDRISH.COM — SEO DELIVERY TRACKER · August 2026</span><span>Progress is stored locally in this browser.</span></footer>
+</div>
+
+<script>
+const TASKS = [
+
+    {id:"c1",tier:"critical",title:"Fix sitewide duplicate title tags & meta descriptions",desc:"Template the <title> and meta description to dynamically pull city + venue/area name. Never hardcode \"in London\" on non-London pages.",effort:"1-2 days",role:"Developer"},
+    {id:"c2",tier:"critical",title:"Fix the footer link duplication rendering bug",desc:"The full 3,000+ area link block is rendering 5-6x on a single page. Find and fix the template loop causing this before anything else.",effort:"1 day",role:"Developer"},
+    {id:"c3",tier:"critical",title:"Restructure the location footer to city-relevant links only",desc:"Stop shipping all six cities' area links on every page. Show only the current city's areas (or a link to a proper location index page).",effort:"2-3 days",role:"Developer"},
+    {id:"c4",tier:"critical",title:"Fix misspelled location names in URLs and content",desc:"Manchestar, Aiexandra Paiace, IIford, Prunswick Park, Haringgey, Rochdalle, Cotteriidge, Beckenhum, Bellinghum, Patersham, Choriton and others. Audit full location list, fix slugs and display text, 301 redirect old URLs.",effort:"2-3 days",role:"Developer + Content"},
+    {id:"c5",tier:"critical",title:"Write unique body content for hotel and area page templates",desc:"Replace copy-pasted boilerplate with genuinely unique per-page content: local landmarks, delivery times, area-specific framing. At minimum 150-300 unique words per page.",effort:"ongoing",role:"Content"},
+    {id:"c6",tier:"critical",title:"Decide fate of zero-impression pages",desc:"For area/hotel pages with no search visibility at all, decide: invest in unique content, consolidate into city hub pages, or noindex. Don't leave them as thin duplicate content indefinitely.",effort:"Half day (decision) + dev time varies by scope",role:"SEO Analyst + Content"},
+    {id:"h1",tier:"high",title:"Fix the 6 core service/price pages for visibility",desc:"Laundry Service, Clean & Iron, Ironing Only, Dry Cleaning, Home & Bedding, Alteration. These are the closest pages to a booking decision and currently get 0 clicks. Improve titles, content depth, and internal links pointing to them.",effort:"1 week",role:"Content + Developer"},
+    {id:"h2",tier:"high",title:"Fix broken \"Locations\" carousel links (href=\"<>\")",desc:"The location-switcher widget on every page links nowhere. Wire up real hrefs to the correct area/city pages.",effort:"1 day",role:"Developer"},
+    {id:"h3",tier:"high",title:"Build a dedicated hotel-partnership landing page",desc:"\"laundry service for hotels\" is your single highest-impression non-brand query (925 impressions, position 45). No page currently targets this B2B intent — the 1,000+ hotel pages target guests, not hotel operators.",effort:"2-3 days",role:"Content + Developer"},
+    {id:"h4",tier:"high",title:"Target \"laundry service london\" and similar head terms",desc:"629 impressions at position 34. Build or strengthen a dedicated London hub page optimized for this exact phrase and close variants.",effort:"2-3 days",role:"Content"},
+    {id:"h5",tier:"high",title:"Build proper city hub pages with hierarchical internal linking",desc:"Replace the flat footer dump with a real structure: City hub → Area pages, linked contextually. Concentrates link equity where it matters.",effort:"1-2 weeks",role:"Developer"},
+    {id:"m1",tier:"medium",title:"Remove the obsolete meta-keywords tag",desc:"No ranking value in 2026, just page weight. Quick win.",effort:"<1 day",role:"Developer"},
+    {id:"m2",tier:"medium",title:"Add structured data (schema markup)",desc:"LocalBusiness schema sitewide, Service schema on price pages, Review schema for testimonials. No schema currently detected.",effort:"2-3 days",role:"Developer"},
+    {id:"m3",tier:"medium",title:"Fix broken/placeholder image alt text on logo assets",desc:"Logo images currently show alt=\"No image available\" — looks like a broken image pipeline, not intentional alt text.",effort:"1 day",role:"Developer"},
+    {id:"m4",tier:"medium",title:"Export and review the GSC Index Coverage report",desc:"This audit used Performance data only. Pull Coverage/Indexing report to confirm how many of the 2,000+ hotel/area pages are actually indexed vs excluded — this resizes the content workload.",effort:"half day",role:"SEO Analyst"},
+    {id:"m5",tier:"medium",title:"Audit Core Web Vitals / page weight",desc:"The footer bloat likely affects load time and Core Web Vitals. Run PageSpeed Insights on a sample of pages post-fix to confirm improvement.",effort:"half day",role:"SEO Analyst"},
+    {id:"p1",tier:"high",title:"Run PageSpeed Insights on 4 page types (mobile + desktop)",desc:"Homepage, a hotel page, an area page, a price page. Establishes real LCP/INP/CLS baseline instead of guessing from page weight alone.",effort:"half day",role:"SEO Analyst"},
+    {id:"p2",tier:"critical",title:"Fix DOM bloat from the duplicate-block rendering bug",desc:"Same root bug as c2, but flagged here for its Core Web Vitals impact: duplicated blocks inflate DOM size and likely hurt LCP directly.",effort:"1 day (shared with c2)",role:"Developer"},
+    {id:"p3",tier:"high",title:"Add lazy-loading and explicit width/height to all images",desc:"Prevents layout shift (CLS) and speeds initial paint. The \"No image available\" alt fallback seen sitewide suggests images may already be failing to load efficiently.",effort:"2-3 days",role:"Developer"},
+    {id:"p4",tier:"medium",title:"Defer or lazy-load the login/register/reset-password modals",desc:"All three auth modals inject into the DOM on every page load regardless of whether the user needs them. Defer until triggered.",effort:"1-2 days",role:"Developer"},
+    {id:"p5",tier:"high",title:"Paginate or virtualize the location footer instead of full DOM render",desc:"Ties to c3 — once scoped to one city, still render as paginated/lazy list rather than dumping the full list into the DOM at once.",effort:"1-2 days",role:"Developer"},
+    {id:"p6",tier:"medium",title:"Set up ongoing Core Web Vitals monitoring",desc:"Use GSC's Core Web Vitals report (field data, mobile/desktop split) to track real-user experience over time, not just one-off lab tests.",effort:"half day setup",role:"SEO Analyst"},
+    {id:"u1",tier:"medium",title:"Reduce modal/popup interruptions on page load",desc:"Three full auth modals load into the DOM on every visit. Audit whether they block rendering and whether they're needed pre-interaction at all.",effort:"2-3 days",role:"Developer + Design"},
+    {id:"u2",tier:"high",title:"Redesign the location-switcher as a searchable picker",desc:"Currently a broken, duplicated carousel with dead links. Replace with a proper autocomplete/search location picker.",effort:"1 week",role:"Developer + Design"},
+    {id:"u3",tier:"medium",title:"Evaluate the mobile app \"Continue to Website\" interstitial",desc:"Check against analytics whether this interstitial is adding friction and hurting mobile bounce rate.",effort:"half day",role:"SEO Analyst"},
+    {id:"u4",tier:"medium",title:"Visually differentiate hotel/area page templates",desc:"Pages are visually identical, not just content-identical. Even with unique copy, a real user landing on one has no sense of place. Consider local imagery, map embed, or area-specific visual cues.",effort:"ongoing",role:"Design"},
+    {id:"u5",tier:"low",title:"Run a full UX heuristic review of the booking flow",desc:"Ideally backed by session recordings (Hotjar/Clarity) or GA4 behavior data to see how real users move through booking, not just heuristic judgment.",effort:"1 week",role:"Developer + Design"},
+    {id:"cq1",tier:"critical",title:"Fix multiple H1 tags per page (20+ found on one page)",desc:"Caused by the same duplicate-block rendering bug (see c2/p2) — each duplicated block carries its own heading. Should be exactly one H1 per page, matching the primary keyword target.",effort:"1 day (shared with c2)",role:"Developer"},
+    {id:"cq2",tier:"medium",title:"Run a full W3C HTML validation pass",desc:"Do this after the templating/duplication fixes ship, to catch remaining structural issues cleanly rather than validating against a broken template.",effort:"1 day",role:"Developer"},
+    {id:"cq3",tier:"high",title:"Full sitewide broken-link crawl",desc:"The href=\"<>\" pattern found in the location carousel is likely not the only broken-link source. Needs a proper crawl tool (Semrush Site Audit or Screaming Frog), not manual sampling.",effort:"1 day (requires crawl tool access)",role:"SEO Analyst"},
+    {id:"cq4",tier:"critical",title:"Verify canonical tags are correct at scale",desc:"With 2,000+ templated pages, a canonical bug could be silently causing duplicate-content penalties or pointing pages at the wrong canonical target. Spot-checked pages looked correct but need a full crawl to confirm at scale.",effort:"1-2 days",role:"Developer + SEO Analyst"},
+    {id:"d1",tier:"critical",title:"Pull GSC Index Coverage report",desc:"Confirms how many of the ~2,000 hotel/area pages are actually indexed vs excluded. This resizes the entire content workload — the single most valuable next data pull.",effort:"1 hour",role:"SEO Analyst"},
+    {id:"d2",tier:"high",title:"Pull GSC Mobile Usability and Sitemaps reports",desc:"Flags mobile-specific rendering issues and confirms what's actually submitted/discovered vs indexed.",effort:"1 hour",role:"SEO Analyst"},
+    {id:"d3",tier:"high",title:"Pull a Semrush or Ahrefs Site Audit crawl",desc:"Effectively a full technical crawl (broken links, duplicate titles/content at scale, crawlability, redirects) that replaces manual page-by-page sampling with a full-site view.",effort:"1-2 hours to export + review",role:"SEO Analyst"},
+    {id:"d4",tier:"medium",title:"Pull backlink profile and position-tracking history",desc:"Confirms whether the domain is earning authority over time and whether any toxic links are dragging performance down.",effort:"1 hour",role:"SEO Analyst"},
+    {id:"b1",tier:"high",title:"Upload the compiled disavow file to GSC",desc:"48 domains identified from the full referring-domains export as SEO self-promotion sites, link directories, PBN-pattern auto-generated subdomains, and a few gambling/adult domains. File is compiled and ready — upload via GSC > Links > Disavow Links tool.",effort:"15 min",role:"SEO Analyst"},
+    {id:"b2",tier:"low",title:"Manual action check — RESOLVED",desc:"Confirmed via GSC (Aug 2026): no manual action/penalty on the domain. Good news — closes this line of investigation.",effort:"Complete",role:"SEO Analyst"},
+    {id:"b3",tier:"low",title:"Backlink data reliability note",desc:"The 705-domain export totals ~152K backlinks vs. ~533K reported in the Semrush overview. Since access is via a third-party/group-buy tool rather than a direct login, treat any future numbers from this source with a note of caution if they look inconsistent with on-screen totals. Not worth spending more time chasing given the reasonable disavow list already compiled.",effort:"No action needed",role:"SEO Analyst"},
+    {id:"b4",tier:"low",title:"Backlink origin context (lower priority)",desc:"No longer urgent given no penalty and no attack pattern found — but if useful context ever surfaces about pre-2026 SEO vendors, it may explain the directory/SEO-tool spam accumulation.",effort:"Optional / as time allows",role:"SEO Analyst"},
+    {id:"r1",tier:"critical",title:"Investigate and fix 26,809 temporary redirects",desc:"An extremely high number for a site this size — almost certainly a systemic redirect rule misfiring at scale (e.g. a trailing-slash or protocol redirect looping across templated pages) rather than 26,809 individual issues. Fix the root rule, then convert legitimate redirects to permanent (301) where appropriate.",effort:"2-3 days to diagnose + fix",role:"Developer"},
+    {id:"r2",tier:"medium",title:"Fix 45 broken internal links and 1 broken internal image",desc:"Confirmed via Semrush crawl. Includes but isn't limited to the href=\"<>\" pattern found earlier in the location carousel.",effort:"1 day",role:"Developer"},
+    {id:"r3",tier:"medium",title:"Fix 16 links on HTTPS pages pointing to HTTP versions",desc:"Protocol downgrade links — minor security/trust signal issue, easy fix.",effort:"half day",role:"Developer"},
+    {id:"r4",tier:"low",title:"Resolve 4 DNS resolution failures and 7 pages returning 4xx",desc:"Small in count but worth confirming these aren't symptomatic of a bigger config issue.",effort:"half day",role:"Developer"},
+    {id:"s1",tier:"high",title:"Regenerate the XML sitemap to match real site structure",desc:"Only 2% of pages Semrush crawled (via real internal links) appear in the current sitemap; 98% don't match. Separately, 2,294 sitemap URLs are orphaned (not internally linked at all). The sitemap and actual site structure have diverged significantly — needs to be rebuilt from the real, fixed architecture once c3/s1 hierarchy work lands.",effort:"1-2 days",role:"Developer"},
+    {id:"s2",tier:"low",title:"Add sitemap.xml reference to robots.txt",desc:"Currently missing — a quick, correct-practice fix.",effort:"<1 day",role:"Developer"},
+    {id:"p7",tier:"critical",title:"Add explicit width/height attributes to all images",desc:"Confirmed root cause of the 0.215 CLS score (poor) on mobile via Lighthouse diagnostics. Highest-impact, lowest-effort fix on the performance list.",effort:"1-2 days",role:"Developer"},
+    {id:"p8",tier:"high",title:"Eliminate render-blocking resources on mobile",desc:"Lighthouse flags 2,320ms of render-blocking time on mobile (vs minimal on desktop) — a major contributor to the 3.8s mobile LCP vs 1.0s desktop LCP gap.",effort:"2-3 days",role:"Developer"},
+    {id:"p9",tier:"medium",title:"Minify and reduce unused CSS/JS sitewide",desc:"1,199 pages flagged sitewide by Semrush; Lighthouse separately flags 95KiB reducible unused JS and 42KiB unused CSS on mobile.",effort:"2-3 days",role:"Developer"},
+    {id:"p10",tier:"medium",title:"Set efficient cache lifetimes for static assets",desc:"Lighthouse flags ~4MB of potential savings from proper cache-control headers, on both mobile and desktop.",effort:"1 day",role:"Developer"},
+    {id:"a1",tier:"medium",title:"Fix accessibility issues flagged by Lighthouse (score: 81/100)",desc:"Form elements missing labels, links without discernible names, insufficient color contrast, touch targets too small/closely spaced, page missing a main landmark, headings not in sequential order (ties directly to the multiple-H1 bug). Also affects mobile usability signals.",effort:"3-4 days",role:"Developer + Design"},
+    {id:"dir1",tier:"critical",title:"Build a dedicated /hotels directory page",desc:"A single master index of every hotel page, organized by city with clear sub-navigation. This becomes the real discovery path for the 1,000+ hotel pages, for both users and Google, replacing the flat footer dump as the site's link-equity source for this section.",effort:"3-4 days",role:"Developer"},
+    {id:"dir2",tier:"critical",title:"Build a dedicated /areas directory page",desc:"Same concept as dir1, for the 1,000+ area pages, one master index organized by city.",effort:"3-4 days",role:"Developer"},
+    {id:"dir3",tier:"high",title:"Curate a flagship list of 10-15 hotels and areas for the homepage footer",desc:"Replace the current full 3,000+ link dump with a short, deliberately chosen list of the highest-value hotels/areas (by search volume, booking value, or strategic priority), plus a clear link through to the full /hotels and /areas directories for everything else.",effort:"2-3 days",role:"SEO Analyst + Developer"},
+    {id:"dir4",tier:"high",title:"Surface each city's top areas/hotels on that city's hub page only",desc:"When a user is on a city page (e.g. /city/london), show only that city's top 8-12 areas and top 8-12 hotels, with a \"See all areas in London\" / \"See all hotels in London\" link through to the filtered directory view. Keeps link equity relevant and pages focused, instead of every page linking to every other page sitewide.",effort:"3-4 days",role:"SEO Analyst + Developer"},
+    {id:"dir5",tier:"medium",title:"Add breadcrumb navigation sitewide (Home > City > Area/Hotel)",desc:"Reinforces the site hierarchy for both users and Google. Include BreadcrumbList schema markup alongside the visible breadcrumbs, a quick, low-effort SEO win once the hierarchy above exists.",effort:"1-2 days",role:"Developer"},
+    {id:"sg1",tier:"high",title:"Publish an on-page content & markup style guide",desc:"Formal, written ruleset covering: one H1 per page matching the primary keyword, heading hierarchy (H1 to H2 to H3, no skipping), image alt text pattern, internal link anchor text variation (avoid repeating identical anchor text sitewide), and URL casing/structure conventions. Prevents this exact class of bug (20+ H1 tags, sitewide duplicate anchors) from recurring as new pages get built. Full ruleset delivered in the Implementation Pack.",effort:"Complete, see Implementation Pack",role:"SEO Analyst + Content"},
+    {id:"cb1",tier:"high",title:"Add a \"Laundrish vs Hotel Laundry\" comparison table to hotel pages",desc:"Benchmarked against a well-executed competitor hotel page. Side-by-side comparison (pricing, turnaround, booking convenience, tracking) — both a conversion device and a genuine content block that differentiates the page from a thin template. Copy and structure provided in the Implementation Pack.",effort:"2-3 days",role:"Content + Developer"},
+    {id:"cb2",tier:"high",title:"Add real map embeds and geo schema to hotel pages",desc:"Use each hotel's actual coordinates for a map embed plus GeoCoordinates in the LocalBusiness schema (see schema-markup.txt block 1B) — stronger trust signal than a generic hero image, and adds genuine local relevance.",effort:"2-3 days",role:"Developer"},
+    {id:"cb3",tier:"medium",title:"Add hotel-specific FAQ blocks with FAQPage schema",desc:"4-6 real questions per hotel page (e.g. \"Can Laundrish collect from {{Hotel Name}}?\"), marked up with FAQPage schema for FAQ rich-result eligibility. Template provided in schema-markup.txt block 1C.",effort:"2-3 days",role:"Content + Developer"},
+    {id:"kw1",tier:"critical",title:"Target \"near me\" search intent sitewide",desc:"51 keywords, 119,760 combined monthly searches (Semrush Keyword Gap data) are \"near me\" phrases (laundromat near me, dry cleaning near me, laundry service near me...) — 53% of all opportunity found in the gap analysis. Laundrish ranks for none of them. Incorporate \"near me\" phrasing into title tags, H1s, and body copy on the homepage and city hub pages specifically, alongside named-area targeting.",effort:"2-3 days",role:"SEO Analyst + Content"},
+    {id:"kw2",tier:"critical",title:"Set up / audit Google Business Profile",desc:"\"Near me\" searches are heavily served by Google's local map pack, not just organic results — a channel not covered anywhere else in this audit. Needs a decision from the client: does Laundrish have a physical storefront per city (GBP-eligible) or operate as delivery-only (different GBP rules apply)? Flagging as a real gap rather than assuming.",effort:"1 day to audit, ongoing to manage",role:"SEO Analyst"},
+    {id:"kw3",tier:"high",title:"Fix and target \"clean and iron\" exact-match keyword",desc:"1,000 searches/month, KD 12 (low difficulty) for Laundrish's own named service, currently zero ranking. Should resolve largely automatically once c1 (duplicate meta/title fix) lands and the page is properly indexed — treat as a priority validation check once c1 ships.",effort:"Half day (validation after c1)",role:"SEO Analyst"},
+    {id:"kw4",tier:"medium",title:"Add \"[area] dry cleaners\" as an alternate keyword pattern",desc:"53 hyper-local keywords (\"nunhead dry cleaners\", \"purley dry cleaners\", etc.), each modest volume (260-390/mo) but low difficulty (KD 7-21). Current meta title templates only cover \"laundry service in {{area}}\" phrasing — add \"{{Area}} Dry Cleaners\" as a represented variant in title/H1 rotation. Updates the Implementation Pack meta template spec.",effort:"1 day (template update)",role:"Content + SEO Analyst"},
+    {id:"cp1",tier:"high",title:"Restructure price pages with category grouping and jump-navigation",desc:"Benchmarked against Laundryheap's price pages: items grouped by category (Shirts, Tops, Bottoms, Suits, Dresses, Outerwear, Bedding, Kitchen items, etc.) with jump-nav anchors at the top. Far more usable than a flat list, especially as the price list grows.",effort:"3-4 days",role:"Developer + Content"},
+    {id:"cp2",tier:"medium",title:"Add per-service info blocks to price pages",desc:"Benchmarked pattern: each service includes \"Service overview\", \"Suitable for\", \"Do not include\", \"How to prepare for collection\", and \"How you'll receive items back\" — sets real expectations and reduces support queries.",effort:"2-3 days",role:"Content + Developer"},
+    {id:"cp3",tier:"medium",title:"Add an educational explainer to each service page",desc:"Benchmarked pattern (ihateironing): a short, genuine explainer of what the service actually is and why it works (e.g. what dry cleaning is, why solvent-based cleaning avoids shrinkage/fading). Adds real topical depth beyond marketing copy, and gives Google (and users) a reason the page is more than a price list.",effort:"2-3 days",role:"Content"},
+    {id:"tr1",tier:"high",title:"Add a \"Meet the Team\" trust section with real named partners/staff",desc:"Benchmarked pattern (ihateironing \"Meet the Masters\"): real named local cleaning partners or staff, with photos and a personal quote, tied to specific areas. A materially stronger trust device than generic customer testimonials — shows the real people behind the service.",effort:"1 week (content + photography)",role:"Content + Design"},
+    {id:"tr2",tier:"medium",title:"Add live, monthly-updated stats to homepage and city hub pages",desc:"Benchmarked pattern: \"X items cleaned this month\", \"X re-cleaned\", \"XX.X% cleaned without issue\" — specific, dynamically updated numbers are more credible than static claims and give Google fresh content signals on a monthly cadence.",effort:"2-3 days",role:"Developer + SEO Analyst"},
+    {id:"nav1",tier:"medium",title:"Add a sub-region tier to breadcrumbs for large cities",desc:"Benchmarked pattern (ihateironing): Home > London > West London > South Kensington — a genuine 3-tier hierarchy for large cities, one level deeper than the current City > Area plan. Worth adding for London specifically given its size; smaller cities may not need the extra tier.",effort:"2-3 days",role:"Developer + SEO Analyst"},
+    {id:"hr1",tier:"critical",title:"Verify real hotel relationships before publishing hotel pages",desc:"Client-raised risk: hotel pages should not imply a partnership or reception-collection arrangement that doesn't actually exist. Audit which of the 1,000+ hotel pages have a confirmed real relationship (reception will accept/hand off items) versus which are speculative 'collection near {{Hotel Name}}' pages. Affects visible copy, the Hotel entity schema (schema-markup.txt block 1C), and is a genuine accuracy/reputational risk at this page count.",effort:"1 week (audit) + ongoing as pages are added",role:"Content + SEO Analyst"},
+];
+
+const STREAMS = [
+["c","Technical Foundations","Template, duplication, location and core crawlability fixes."],
+["h","Search & Commercial Opportunities","High-value service, hotel and city search opportunities."],
+["m","Technical Hygiene","Small technical improvements and validation work."],
+["p","Performance & Core Web Vitals","Page speed, DOM weight, rendering and asset performance."],
+["u","UX & Conversion Experience","Booking journey, page templates and interaction improvements."],
+["cq","Code Quality & HTML","Markup quality, links, canonicals and structural validation."],
+["d","Data & Measurement","GSC, crawl, backlink and measurement inputs."],
+["b","Backlinks & Risk","Link-profile cleanup, manual actions and historical context."],
+["r","Redirects & Internal Links","Redirect rules, broken links, protocol and DNS issues."],
+["s","Sitemap & Crawl Signals","XML sitemap and robots.txt alignment."],
+["a","Accessibility","WCAG-aligned accessibility and mobile usability improvements."],
+["dir","Information Architecture","Hotel, area, city and breadcrumb hierarchy."],
+["sg","Content Governance","Reusable on-page rules and implementation standards."],
+["cb","Local Page Content","Unique area/hotel content, maps and local relevance."],
+["kw","Keyword & Local Search","Keyword targeting, local intent and Google Business Profile."],
+["cp","Price & Service Pages","Commercial page structure, usability and topical depth."],
+["tr","Trust & Proof","Human trust signals and fresh performance evidence."],
+["nav","Navigation Depth","Sub-region hierarchy for large cities."],
+["hr","Hotel Relationship Accuracy","Verification before publishing hotel-specific claims."]
+];
+
+const tierLabel={critical:"Critical",high:"High",medium:"Medium",low:"Lower"};
+let state={}, priority="all", role="all", view="all", query="";
+
+function load(){try{state=JSON.parse(localStorage.getItem("laundrish-seo-tasks")||"{}")}catch(e){state={}} render()}
+function save(){localStorage.setItem("laundrish-seo-tasks",JSON.stringify(state))}
+function streamFor(t){for(const s of STREAMS)if(t.id.startsWith(s[0]))return s;return["other","Other","Additional delivery tasks."]}
+function matches(t){
+if(priority!=="all"&&t.tier!==priority)return false;
+if(role!=="all"&&!(t.role||"").includes(role))return false;
+if(view==="open"&&state[t.id])return false;
+if(view==="done"&&!state[t.id])return false;
+if(query){const q=query.toLowerCase();return[t.title,t.desc,t.role,t.effort,t.tier].join(" ").toLowerCase().includes(q)}
+return true
+}
+function render(){
+const main=document.getElementById("sections");main.innerHTML="";
+let done=0,criticalOpen=0;TASKS.forEach(t=>{if(state[t.id])done++;if(t.tier==="critical"&&!state[t.id])criticalOpen++});
+const pct=TASKS.length?Math.round(done/TASKS.length*100):0;
+document.getElementById("stat-total").textContent=TASKS.length;document.getElementById("stat-done").textContent=done;document.getElementById("stat-critical").textContent=criticalOpen;document.getElementById("stat-streams").textContent=STREAMS.length;
+document.getElementById("progress-number").textContent=pct+"%";document.getElementById("progress-label").textContent=done+" of "+TASKS.length+" complete";document.getElementById("progress-fill").style.width=pct+"%";
+let shown=0;
+STREAMS.forEach(([key,name,sub])=>{
+const list=TASKS.filter(t=>streamFor(t)[0]===key&&matches(t));if(!list.length)return;shown+=list.length;
+const section=document.createElement("section");section.className="workstream";
+section.innerHTML='<div class="workstream-head"><span class="workstream-marker"></span><div><h2 class="workstream-title">'+name+'</h2><p class="workstream-sub">'+sub+'</p></div><span class="workstream-count">'+list.length+' visible</span></div>';
+list.forEach(t=>{
+const isDone=!!state[t.id],card=document.createElement("article");card.className="task"+(isDone?" done":"");
+card.innerHTML='<input class="check" type="checkbox" '+(isDone?"checked":"")+' aria-label="Mark task complete"><div><p class="task-title"></p><p class="task-desc"></p></div><div class="meta"><span class="badge badge-tier t-'+t.tier+'">'+tierLabel[t.tier]+'</span>'+(t.role?'<span class="badge badge-role">'+t.role+'</span>':"")+'<span class="badge badge-effort">'+t.effort+'</span></div>';
+card.querySelector(".task-title").textContent=t.title;card.querySelector(".task-desc").textContent=t.desc;
+card.querySelector(".check").addEventListener("change",()=>{state[t.id]=!state[t.id];save();render()});section.appendChild(card)
+});
+main.appendChild(section)
+});
+if(!shown)main.innerHTML='<div class="empty">No tasks match the current filters. Try clearing the search or selecting “All”.</div>';
+}
+document.getElementById("search").addEventListener("input",e=>{query=e.target.value;render()});
+document.querySelectorAll(".priority").forEach(b=>b.addEventListener("click",()=>{priority=b.dataset.tier;document.querySelectorAll(".priority").forEach(x=>x.classList.remove("priority-active"));b.classList.add("priority-active");render()}));
+document.querySelectorAll(".role").forEach(b=>b.addEventListener("click",()=>{role=b.dataset.role;document.querySelectorAll(".role").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()}));
+document.getElementById("show-all").addEventListener("click",()=>{view="all";render()});
+document.getElementById("show-open").addEventListener("click",()=>{view="open";render()});
+document.getElementById("show-done").addEventListener("click",()=>{view="done";render()});
+document.getElementById("reset").addEventListener("click",()=>{if(confirm("Reset all task progress?")){state={};save();render()}});
+load();
+</script>
+</body>
+</html>
